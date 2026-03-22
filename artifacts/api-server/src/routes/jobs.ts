@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import { db } from "@workspace/db";
 import { jobsTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
+import { z } from "zod";
 
 const router: IRouter = Router();
 
@@ -31,6 +32,46 @@ router.get("/jobs", async (req, res) => {
   })));
 });
 
+const createJobSchema = z.object({
+  title: z.string().min(1),
+  company: z.string().min(1),
+  location: z.string().min(1),
+  type: z.string().min(1),
+  category: z.string().min(1),
+  salary: z.string().optional(),
+  description: z.string().min(1),
+  logo: z.string().optional(),
+  featured: z.boolean().optional(),
+});
+
+router.post("/jobs", async (req, res) => {
+  const parsed = createJobSchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ message: "Invalid job data", errors: parsed.error.flatten() });
+    return;
+  }
+
+  const [job] = await db.insert(jobsTable).values({
+    ...parsed.data,
+    postedAt: new Date(),
+    featured: parsed.data.featured ?? false,
+  }).returning();
+
+  res.status(201).json({
+    id: job.id,
+    title: job.title,
+    company: job.company,
+    location: job.location,
+    type: job.type,
+    category: job.category,
+    salary: job.salary,
+    description: job.description,
+    logo: job.logo,
+    postedAt: job.postedAt,
+    featured: job.featured,
+  });
+});
+
 router.get("/jobs/:id", async (req, res) => {
   const id = parseInt(req.params.id);
   if (isNaN(id)) {
@@ -58,6 +99,22 @@ router.get("/jobs/:id", async (req, res) => {
     postedAt: job.postedAt,
     featured: job.featured,
   });
+});
+
+router.post("/jobs/:id/apply", async (req, res) => {
+  const id = parseInt(req.params.id);
+  if (isNaN(id)) {
+    res.status(400).json({ message: "Invalid job ID" });
+    return;
+  }
+
+  const [job] = await db.select().from(jobsTable).where(eq(jobsTable.id, id));
+  if (!job) {
+    res.status(404).json({ message: "Job not found" });
+    return;
+  }
+
+  res.json({ success: true, message: `Application submitted for ${job.title} at ${job.company}` });
 });
 
 export default router;

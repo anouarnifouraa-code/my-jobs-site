@@ -1,7 +1,8 @@
 import { Link } from "wouter";
 import { formatDistanceToNow } from "date-fns";
-import { ArrowLeft, Building2, MapPin, DollarSign, Clock, Briefcase, Calendar, Link as LinkIcon, Share2, Loader2, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, MapPin, DollarSign, Briefcase, Calendar, Link as LinkIcon, Share2, Loader2, CheckCircle2 } from "lucide-react";
 import { useGetJob } from "@workspace/api-client-react";
+import { CompanyLogo } from "@/components/ui/company-logo";
 import { useApplyForJob } from "@/hooks/use-jobs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -67,12 +68,8 @@ export default function JobDetails({ id }: { id: string }) {
             {/* Header Content */}
             <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 pb-8 border-b border-border">
               <div className="flex flex-col md:flex-row gap-6 items-start">
-                <div className="h-24 w-24 shrink-0 rounded-2xl border-4 border-card bg-secondary flex items-center justify-center overflow-hidden shadow-lg -mt-16 md:mt-0 relative z-20">
-                  {job.logo ? (
-                    <img src={job.logo} alt={`${job.company} logo`} className="h-full w-full object-cover bg-white" />
-                  ) : (
-                    <Building2 className="h-10 w-10 text-muted-foreground" />
-                  )}
+                <div className="shrink-0 -mt-16 md:mt-0 relative z-20">
+                  <CompanyLogo logo={job.logo ?? null} company={job.company} size="lg" />
                 </div>
                 
                 <div>

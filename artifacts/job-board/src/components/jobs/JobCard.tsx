@@ -1,8 +1,9 @@
 import { Link } from "wouter";
 import { formatDistanceToNow } from "date-fns";
-import { MapPin, DollarSign, Building2, Clock, Star } from "lucide-react";
+import { MapPin, DollarSign, Clock, Star } from "lucide-react";
 import { type Job } from "@workspace/api-client-react";
 import { Badge } from "@/components/ui/badge";
+import { CompanyLogo } from "@/components/ui/company-logo";
 
 interface JobCardProps {
   job: Job;
@@ -34,13 +35,7 @@ export function JobCard({ job }: JobCardProps) {
         )}
 
         <div className="flex items-start gap-5">
-          <div className="h-16 w-16 shrink-0 rounded-2xl border border-border/50 bg-secondary/50 flex items-center justify-center overflow-hidden">
-            {job.logo ? (
-              <img src={job.logo} alt={`${job.company} logo`} className="h-full w-full object-cover" />
-            ) : (
-              <Building2 className="h-8 w-8 text-muted-foreground" />
-            )}
-          </div>
+          <CompanyLogo logo={job.logo ?? null} company={job.company} size="md" />
           
           <div className="flex-1 min-w-0">
             <h3 className="font-display text-xl font-bold text-foreground group-hover:text-primary transition-colors truncate">
