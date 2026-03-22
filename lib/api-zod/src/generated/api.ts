@@ -14,3 +14,49 @@ import * as zod from "zod";
 export const HealthCheckResponse = zod.object({
   status: zod.string(),
 });
+
+/**
+ * Returns a list of all job postings
+ * @summary List all jobs
+ */
+export const ListJobsQueryParams = zod.object({
+  category: zod.coerce.string().optional(),
+  location: zod.coerce.string().optional(),
+  type: zod.coerce.string().optional(),
+});
+
+export const ListJobsResponseItem = zod.object({
+  id: zod.number(),
+  title: zod.string(),
+  company: zod.string(),
+  location: zod.string(),
+  type: zod.string().describe("e.g. Full-time, Part-time, Contract, Remote"),
+  category: zod.string().describe("e.g. Engineering, Design, Marketing"),
+  salary: zod.string().optional().describe("Salary range e.g. $80k - $120k"),
+  description: zod.string(),
+  logo: zod.string().optional().describe("Company logo URL or initials"),
+  postedAt: zod.date(),
+  featured: zod.boolean(),
+});
+export const ListJobsResponse = zod.array(ListJobsResponseItem);
+
+/**
+ * @summary Get a job by ID
+ */
+export const GetJobParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const GetJobResponse = zod.object({
+  id: zod.number(),
+  title: zod.string(),
+  company: zod.string(),
+  location: zod.string(),
+  type: zod.string().describe("e.g. Full-time, Part-time, Contract, Remote"),
+  category: zod.string().describe("e.g. Engineering, Design, Marketing"),
+  salary: zod.string().optional().describe("Salary range e.g. $80k - $120k"),
+  description: zod.string(),
+  logo: zod.string().optional().describe("Company logo URL or initials"),
+  postedAt: zod.date(),
+  featured: zod.boolean(),
+});

@@ -5,9 +5,6 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-export interface HealthStatus {
-  status: string;
-}
 
 export interface Job {
   id: number;
@@ -23,16 +20,6 @@ export interface Job {
   description: string;
   /** Company logo URL or initials */
   logo?: string;
-  postedAt: string;
+  postedAt: Date;
   featured: boolean;
 }
-
-export interface Error {
-  message: string;
-}
-
-export type ListJobsParams = {
-  category?: string;
-  location?: string;
-  type?: string;
-};

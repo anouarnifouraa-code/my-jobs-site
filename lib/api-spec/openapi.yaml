@@ -1,6 +1,5 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
   description: API specification
@@ -10,6 +9,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: jobs
+    description: Job listing operations
 paths:
   /healthz:
     get:
@@ -24,6 +25,61 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /jobs:
+    get:
+      operationId: listJobs
+      tags: [jobs]
+      summary: List all jobs
+      description: Returns a list of all job postings
+      parameters:
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: location
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: type
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of jobs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Job"
+  /jobs/{id}:
+    get:
+      operationId: getJob
+      tags: [jobs]
+      summary: Get a job by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Job details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+        "404":
+          description: Job not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +89,50 @@ components:
           type: string
       required:
         - status
-
+    Job:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        company:
+          type: string
+        location:
+          type: string
+        type:
+          type: string
+          description: "e.g. Full-time, Part-time, Contract, Remote"
+        category:
+          type: string
+          description: "e.g. Engineering, Design, Marketing"
+        salary:
+          type: string
+          description: "Salary range e.g. $80k - $120k"
+        description:
+          type: string
+        logo:
+          type: string
+          description: Company logo URL or initials
+        postedAt:
+          type: string
+          format: date-time
+        featured:
+          type: boolean
+      required:
+        - id
+        - title
+        - company
+        - location
+        - type
+        - category
+        - description
+        - postedAt
+        - featured
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message

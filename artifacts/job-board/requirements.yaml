@@ -1,0 +1,14 @@
+packages:
+  "framer-motion": "For smooth page transitions, stagger effects, and modal animations"
+  "date-fns": "For formatting job posting dates (e.g. '2 days ago')"
+  "clsx": "For conditional tailwind class combining"
+  "tailwind-merge": "For resolving tailwind class conflicts"
+
+images:
+  - path: "artifacts/job-board/public/images/hero-pattern.png"
+    description: "Abstract minimal geometric waves and mesh gradients in deep corporate blues and soft whites, transparent background, conveying a premium and professional technology feel"
+    aspect_ratio: "16:9"
+
+notes:
+  - "The App assumes 'useListJobs' and 'useGetJob' are successfully generated in @workspace/api-client-react"
+  - "Job creation is mocked via custom useMutation since no POST endpoint exists in the schema, fulfilling the 'all buttons wired' requirement"
